@@ -102,20 +102,56 @@ void updateExpense(Month* head, string monthname,  string expensename, int newam
     currentexpense->amount = newamount;
     cout << "Expense " << expensename << " updated to Rs" << newamount << " in " << monthname << ".\n";
 }
+
+
+void deleteExpense(Month* head,  string monthname,  string expensename) {
+    Month* temp = head;
+    while (temp && temp->monthname != monthname) {
+        temp = temp->next;
+    }
+    if (!temp) {
+        cout << "Month " << monthname << " not found ";
+        return;
+    }
+
+    Expense* currentexpense = temp->expensehead;
+    Expense* prevExpense = NULL;
+    while (currentexpense && currentexpense->expensename != expensename) {
+        prevExpense = currentexpense;
+        currentexpense = currentexpense->next;
+    }
+    if (!currentexpense) {
+        cout << "Expense '" << expensename << "' not found in " << monthname << endl;
+        return;
+    }
+
+    if (prevExpense) {
+        prevExpense->next = currentexpense->next;
+    } else {
+        temp->expensehead = currentexpense->next;
+    }
+    delete currentexpense;
+    cout << "Expense '" << expensename << "' deleted from " << monthname << endl;
+}
+
 int main(){
     Month* head=NULL;
     addmonth(head,"June");
     addmonth(head,"July");
 
-addexpense(head, "June", "Notes ",1000);
-addexpense(head, "June", "Travel ",5000);
+addexpense(head, "June", "Notes",1000);
+addexpense(head, "June", "Travel",5000);
 addexpense(head, "June", "Groceries ",6000);
 addexpense(head, "June", "Utilities ", 10000);
-addexpense(head,"July", "Notes ", 1200);
+addexpense(head,"July", "Notes", 1200);
 
 displayAllExpenses(head);
 
 MaxExpense(head,"June");
 
-updateExpense(head, "June ", "Notes", 1300);
+updateExpense(head, "June", "Notes", 1300);
+
+deleteExpense(head, "June", "Travel");
+
+displayAllExpenses(head);
 }
